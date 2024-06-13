@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-create-post',
@@ -10,9 +10,28 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class CreatePostComponent {
   createPostForm = new FormGroup({
-    title: new FormControl<string>('', { nonNullable: true }),
-    content: new FormControl<string>('', { nonNullable: true })
+    // title: new FormControl<string>('',[Validators.required, Validators.minLength(6), Validators.maxLength(100)])
+    title: new FormControl<string>('',
+      {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(6), Validators.maxLength(100)]
+      }
+    ),
+    content: new FormControl<string>('',
+      {
+        nonNullable: true,
+        validators: [Validators.required, Validators.maxLength(3000)]
+      }
+    )
   });
+
+  get title() {
+    return this.createPostForm.controls.title;
+  }
+
+  get content() {
+    return this.createPostForm.controls.content;
+  }
 
   onFormSubmit() {
     console.log(this.createPostForm.value);
