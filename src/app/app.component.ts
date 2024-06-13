@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +11,5 @@ import { NavbarComponent } from './core/components/navbar/navbar.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'dev-pulse';
+  isProd = environment.prod;
 }
