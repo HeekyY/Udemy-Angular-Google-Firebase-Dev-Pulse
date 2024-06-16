@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Firestore, addDoc, collection, doc, setDoc } from '@angular/fire/firestore';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BlogpostService } from '../../services/blogpost.service';
 
 @Component({
   selector: 'app-create-post',
@@ -9,6 +11,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
   styleUrl: './create-post.component.css'
 })
 export class CreatePostComponent {
+
+  blogPostService = inject(BlogpostService);
+
   createPostForm = new FormGroup({
     // title: new FormControl<string>('',[Validators.required, Validators.minLength(6), Validators.maxLength(100)])
     title: new FormControl<string>('',
@@ -34,6 +39,12 @@ export class CreatePostComponent {
   }
 
   onFormSubmit() {
-    console.log(this.createPostForm.value);
+    if (this.createPostForm.invalid) {
+      return;
+    }
+
+    this.blogPostService.createBlogPost(
+      this.createPostForm.getRawValue().title,
+      this.createPostForm.getRawValue().content)
   }
 }
