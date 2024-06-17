@@ -1,17 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Firestore, addDoc, collection, doc, setDoc } from '@angular/fire/firestore';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BlogpostService } from '../../services/blogpost.service';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MarkdownModule],
   templateUrl: './create-post.component.html',
   styleUrl: './create-post.component.css'
 })
 export class CreatePostComponent {
 
+  contentData = signal('');
   blogPostService = inject(BlogpostService);
 
   createPostForm = new FormGroup({
@@ -46,5 +48,9 @@ export class CreatePostComponent {
     this.blogPostService.createBlogPost(
       this.createPostForm.getRawValue().title,
       this.createPostForm.getRawValue().content)
+  }
+
+  onContentChange() {
+    this.contentData.set(this.createPostForm.getRawValue().content);
   }
 }
