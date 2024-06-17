@@ -8,7 +8,7 @@ import { BlogPostHelper } from '../../../core/helpers/blogpost-helper';
 export class BlogpostService {
   firestore = inject(Firestore);
 
-  createBlogPost(title: string, content: string) {
+  createBlogPost(title: string, content: string, coverImageUrl: string) {
     // addDoc
     // const postsCollectionReference = collection(this.firestore, 'blog-posts');
 
@@ -27,6 +27,7 @@ export class BlogpostService {
       title: title,
       content: content,
       publishedOn: new Date(),
+      coverImageUrl: coverImageUrl
       // coverImageUrl
       // })
     });

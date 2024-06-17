@@ -36,7 +36,9 @@
           (keyup)="onContentChange()"
         >
         </textarea>
-        <div class="bg-neutral-100 w-full px-4 py-2 mt-2 h-[200px] blog-content">
+        <div
+          class="bg-neutral-100 w-full px-4 py-2 mt-2 h-[200px] blog-content"
+        >
           <markdown [data]="contentData()"> </markdown>
         </div>
       </div>
@@ -50,6 +52,27 @@
       </p>
       } }
     </div>
+
+    <div class="mt-4">
+      <input
+        type="file"
+        class="hidden"
+        (change)="onCoverImageSelected(coverImageFileInput)"
+        #coverImageFileInput
+      />
+      <button
+        class="border rounded px-4 py-2"
+        (click)="coverImageFileInput.click()"
+      >
+        Add Cover Image
+      </button>
+    </div>
+
+    @if (createPostForm.getRawValue().coverImageUrl) {
+      <div class="mt-4">
+        <img [src]="createPostForm.getRawValue().coverImageUrl" class="w-[200px]" >
+      </div>
+    }
 
     <div class="mt-4">
       <button
