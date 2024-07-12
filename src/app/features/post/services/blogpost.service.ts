@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, doc, setDoc, addDoc, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, addDoc, collection, collectionData, docData } from '@angular/fire/firestore';
 import { BlogPostHelper } from '../../../core/helpers/blogpost-helper';
 import { BlogPost } from '../models/blogpost.model';
 import { Observable } from 'rxjs';
@@ -35,12 +35,42 @@ export class BlogpostService {
     });
   }
 
+  updateBlogPost(slug: string, title: string, content: string, coverImageUrl: string) {
+    // addDoc
+    // const postsCollectionReference = collection(this.firestore, 'blog-posts');
+
+    // addDoc(postsCollectionReference, {
+      // title: title,
+      // content: content,
+    //   publishedOn: new Date(),
+    //   // coverImageUrl
+    // })
+
+    // setDoc
+
+    const blogPostDocumentRef = doc(this.firestore, 'blog-posts', slug);
+    setDoc(blogPostDocumentRef, {
+      title: title,
+      content: content,
+      publishedOn: new Date(),
+      coverImageUrl: coverImageUrl
+    });
+  }
+
   getBlogPosts(): Observable<BlogPost[]> {
     const blogPostCollectionRef = collection(this.firestore, 'blog-posts');
 
     return collectionData(blogPostCollectionRef, {
       idField: 'slug'
     }) as Observable<BlogPost[]>;
+  }
+
+  getBlogPostBySlug(slug: string): Observable<BlogPost> {
+    const blogPostDocumentRef = doc(this.firestore, 'blog-posts', slug);
+
+    return docData(blogPostDocumentRef, {
+      idField: 'slug'
+    }) as Observable<BlogPost>;
   }
 
 }
