@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, doc, setDoc, addDoc } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, addDoc, collection, collectionData } from '@angular/fire/firestore';
 import { BlogPostHelper } from '../../../core/helpers/blogpost-helper';
+import { BlogPost } from '../models/blogpost.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +33,14 @@ export class BlogpostService {
       // coverImageUrl
       // })
     });
+  }
+
+  getBlogPosts(): Observable<BlogPost[]> {
+    const blogPostCollectionRef = collection(this.firestore, 'blog-posts');
+
+    return collectionData(blogPostCollectionRef, {
+      idField: 'slug'
+    }) as Observable<BlogPost[]>;
   }
 
 }
