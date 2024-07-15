@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, doc, setDoc, addDoc, collection, collectionData, docData } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, addDoc, collection, collectionData, docData, deleteDoc } from '@angular/fire/firestore';
 import { BlogPostHelper } from '../../../core/helpers/blogpost-helper';
 import { BlogPost } from '../models/blogpost.model';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +71,12 @@ export class BlogpostService {
     return docData(blogPostDocumentRef, {
       idField: 'slug'
     }) as Observable<BlogPost>;
+  }
+
+  deleteBlogPostBySlug(slug: string): Observable<void> {
+    const blogPostDocumentRef = doc(this.firestore, 'blog-posts', slug);
+    const promise = deleteDoc(blogPostDocumentRef);
+    return from(promise)
   }
 
 }

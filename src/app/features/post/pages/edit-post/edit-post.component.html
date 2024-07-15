@@ -81,18 +81,22 @@
     </div>
 
     @if (editPostForm.getRawValue().coverImageUrl) {
-      <div class="mt-4">
-        <img [src]="editPostForm.getRawValue().coverImageUrl" class="w-[200px]" >
-      </div>
+    <div class="mt-4">
+      <img [src]="editPostForm.getRawValue().coverImageUrl" class="w-[200px]" />
+    </div>
     }
 
-    <div class="mt-4">
+    <div class="mt-4 flex gap-4">
       <button
         type="submit"
         class="px-4 py-2 rounded bg-indigo-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
         [disabled]="editPostForm.valid === false"
       >
         Publish
+      </button>
+
+      <button (click)="onDelete(editPostForm.getRawValue().slug)" type="button" class="px-4 py-2 rounded bg-red-500 text-white">
+        Delete
       </button>
     </div>
   </form>

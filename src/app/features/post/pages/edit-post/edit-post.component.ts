@@ -5,6 +5,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { ImageService } from '../../../../shared/services/image.service';
 import { getDownloadURL } from '@angular/fire/storage';
 import { Router } from '@angular/router';
+import { confirmPasswordReset } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-edit-post',
@@ -112,6 +113,15 @@ export class EditPostComponent implements OnInit {
             alert('Image upload successful');
           })
       })
+  }
+
+  onDelete(slug: string) {
+    this.blogPostService.deleteBlogPostBySlug(slug)
+    .subscribe({
+      next: () => {
+        this.router.navigateByUrl('/dashboard');
+      }
+    });
   }
 
 }
