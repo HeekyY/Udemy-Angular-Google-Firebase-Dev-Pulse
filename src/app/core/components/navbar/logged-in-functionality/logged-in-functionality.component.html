@@ -17,6 +17,20 @@
 
     <ul class="min-w-[200px] absolute right-0 top-14 bg-neutral-50 border rounded"
     [class]="navbarService.hideUserMenu() ? 'hidden': ''">
+
+
+    <li class="bg-neutral-100 text-indigo-500 px-4 py-2">
+      <a class="flex">
+        <span class="ms-2">
+          {{ user().email }}
+        </span>
+      </a>
+    </li>
+
+    <li class="border-b-2">
+
+    </li>
+
       <li class="px-4 py-2 hover:bg-neutral-200">
         <a (click)="navbarService.toggleNavbarMenu()"
         [routerLink]="['/dashboard']"  class="flex">
