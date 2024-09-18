@@ -1,14 +1,16 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, doc, setDoc, addDoc, collection, collectionData, docData, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, addDoc, collection, collectionData, docData, deleteDoc, query, where } from '@angular/fire/firestore';
 import { BlogPostHelper } from '../../../core/helpers/blogpost-helper';
 import { BlogPost } from '../models/blogpost.model';
 import { Observable, from } from 'rxjs';
+import { UserService } from '../../../core/services/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlogpostService {
   firestore = inject(Firestore);
+  userService = inject(UserService);
 
   createBlogPost(title: string, content: string, coverImageUrl: string) {
     // addDoc
@@ -29,9 +31,8 @@ export class BlogpostService {
       title: title,
       content: content,
       publishedOn: new Date(),
-      coverImageUrl: coverImageUrl
-      // coverImageUrl
-      // })
+      coverImageUrl: coverImageUrl,
+      userId: this.userService.currentUser()?.id
     });
   }
 
@@ -53,14 +54,17 @@ export class BlogpostService {
       title: title,
       content: content,
       publishedOn: new Date(),
-      coverImageUrl: coverImageUrl
+      coverImageUrl: coverImageUrl,
+      userId: this.userService.currentUser()?.id
     });
   }
 
-  getBlogPosts(): Observable<BlogPost[]> {
+  getBlogPostsByUser(): Observable<BlogPost[]> {
     const blogPostCollectionRef = collection(this.firestore, 'blog-posts');
 
-    return collectionData(blogPostCollectionRef, {
+    const queryBlogPostFilterByUser = query(blogPostCollectionRef, where('userId', '==', this.userService.currentUser()?.id));
+
+    return collectionData(queryBlogPostFilterByUser, {
       idField: 'slug'
     }) as Observable<BlogPost[]>;
   }
