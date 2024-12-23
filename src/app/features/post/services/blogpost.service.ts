@@ -1,12 +1,25 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, doc, setDoc, addDoc, collection, collectionData, docData, deleteDoc, query, where } from '@angular/fire/firestore';
+import {
+  Firestore,
+  doc,
+  setDoc,
+  addDoc,
+  collection,
+  collectionData,
+  docData,
+  deleteDoc,
+  query,
+  where,
+  writeBatch,
+} from '@angular/fire/firestore';
 import { BlogPostHelper } from '../../../core/helpers/blogpost-helper';
 import { BlogPost } from '../models/blogpost.model';
 import { Observable, from } from 'rxjs';
 import { UserService } from '../../../core/services/user.service';
+import data from '../data/sample.json';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BlogpostService {
   firestore = inject(Firestore);
@@ -17,32 +30,40 @@ export class BlogpostService {
     // const postsCollectionReference = collection(this.firestore, 'blog-posts');
 
     // addDoc(postsCollectionReference, {
-      // title: title,
-      // content: content,
+    // title: title,
+    // content: content,
     //   publishedOn: new Date(),
     //   // coverImageUrl
     // })
 
     // setDoc
 
-    const blogPostDocumentRef = doc(this.firestore, 'blog-posts',
-      BlogPostHelper.createSlug(title));
+    const blogPostDocumentRef = doc(
+      this.firestore,
+      'blog-posts',
+      BlogPostHelper.createSlug(title)
+    );
     setDoc(blogPostDocumentRef, {
       title: title,
       content: content,
       publishedOn: new Date(),
       coverImageUrl: coverImageUrl,
-      userId: this.userService.currentUser()?.id
+      userId: this.userService.currentUser()?.id,
     });
   }
 
-  updateBlogPost(slug: string, title: string, content: string, coverImageUrl: string) {
+  updateBlogPost(
+    slug: string,
+    title: string,
+    content: string,
+    coverImageUrl: string
+  ) {
     // addDoc
     // const postsCollectionReference = collection(this.firestore, 'blog-posts');
 
     // addDoc(postsCollectionReference, {
-      // title: title,
-      // content: content,
+    // title: title,
+    // content: content,
     //   publishedOn: new Date(),
     //   // coverImageUrl
     // })
@@ -55,17 +76,20 @@ export class BlogpostService {
       content: content,
       publishedOn: new Date(),
       coverImageUrl: coverImageUrl,
-      userId: this.userService.currentUser()?.id
+      userId: this.userService.currentUser()?.id,
     });
   }
 
   getBlogPostsByUser(): Observable<BlogPost[]> {
     const blogPostCollectionRef = collection(this.firestore, 'blog-posts');
 
-    const queryBlogPostFilterByUser = query(blogPostCollectionRef, where('userId', '==', this.userService.currentUser()?.id));
+    const queryBlogPostFilterByUser = query(
+      blogPostCollectionRef,
+      where('userId', '==', this.userService.currentUser()?.id)
+    );
 
     return collectionData(queryBlogPostFilterByUser, {
-      idField: 'slug'
+      idField: 'slug',
     }) as Observable<BlogPost[]>;
   }
 
@@ -73,14 +97,41 @@ export class BlogpostService {
     const blogPostDocumentRef = doc(this.firestore, 'blog-posts', slug);
 
     return docData(blogPostDocumentRef, {
-      idField: 'slug'
+      idField: 'slug',
     }) as Observable<BlogPost>;
   }
 
   deleteBlogPostBySlug(slug: string): Observable<void> {
     const blogPostDocumentRef = doc(this.firestore, 'blog-posts', slug);
     const promise = deleteDoc(blogPostDocumentRef);
-    return from(promise)
+    return from(promise);
   }
 
+  batchUpload(): Observable<void> {
+    const batch = writeBatch(this.firestore);
+
+    const blogs = data as {
+      title: string;
+      content: string;
+      coverImageUrl: string;
+    }[];
+
+    blogs.forEach((blog) => {
+      const blogPostDocumentRef = doc(
+        this.firestore,
+        'blog-posts',
+        BlogPostHelper.createSlug(blog.title)
+      );
+
+      batch.set(blogPostDocumentRef, {
+        title: blog.title,
+        content: blog.content,
+        publishedOn: new Date(),
+        coverImageUrl: blog.coverImageUrl,
+        userId: this.userService.currentUser()?.id
+      });
+    });
+
+    return from(batch.commit());
+  }
 }
