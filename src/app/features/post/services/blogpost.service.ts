@@ -93,6 +93,14 @@ export class BlogpostService {
     }) as Observable<BlogPost[]>;
   }
 
+  getAllBlogs(): Observable<BlogPost[]> {
+    const blogPostCollectionRef = collection(this.firestore, 'blog-posts');
+
+    return collectionData(blogPostCollectionRef, {
+      idField: 'slug',
+    }) as Observable<BlogPost[]>;
+  }
+
   getBlogPostBySlug(slug: string): Observable<BlogPost> {
     const blogPostDocumentRef = doc(this.firestore, 'blog-posts', slug);
 

@@ -5,6 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Timestamp } from '@angular/fire/firestore';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { BlogPostHelper } from '../../../../core/helpers/blogpost-helper';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,7 +23,5 @@ export class DashboardComponent {
     return this.blogPosts()?.length
   })
 
-  convertTimestampToDate(timestamp: Timestamp) {
-    return timestamp.toDate();
-  }
+  convertTimestampToDate = BlogPostHelper.convertTimestampToDate;
 }

@@ -1,3 +1,5 @@
+import { Timestamp } from "@angular/fire/firestore";
+
 export class BlogPostHelper {
   // ex.
   // Title: This is a title for blog post
@@ -6,5 +8,9 @@ export class BlogPostHelper {
     const slug = title.toLowerCase().replace(/\s+/g, '-');
     const randomThreeDigitNumber = Math.floor(Math.random() * 1000);
     return `${slug}-${randomThreeDigitNumber}`;
+  }
+
+  static convertTimestampToDate(timestamp: Timestamp) {
+    return timestamp.toDate();
   }
 }
