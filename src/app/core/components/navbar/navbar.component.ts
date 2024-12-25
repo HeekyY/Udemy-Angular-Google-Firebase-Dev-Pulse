@@ -9,24 +9,29 @@ import { User } from '../../models/user.model';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, LoggedOutFunctionalityComponent, LoggedInFunctionalityComponent],
+  imports: [
+    RouterLink,
+    LoggedOutFunctionalityComponent,
+    LoggedInFunctionalityComponent,
+  ],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   userService = inject(UserService);
 
   constructor() {
-    this.userService.user$
-    .subscribe({
-      next: (user: FireAuthUser) => {
-        const applicationUser: User = {
-          email: user.email!,
-          id: user.uid
-        };
+    this.userService.user$.subscribe({
+      next: (user: FireAuthUser | null) => {
+        if (user) {
+          const applicationUser: User = {
+            email: user.email!,
+            id: user.uid,
+          };
 
-        this.userService.currentUser.set(applicationUser);
-      }
+          this.userService.currentUser.set(applicationUser);
+        }
+      },
     });
   }
 }

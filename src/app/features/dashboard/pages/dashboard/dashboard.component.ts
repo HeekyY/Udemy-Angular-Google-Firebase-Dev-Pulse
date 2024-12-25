@@ -8,11 +8,10 @@ import { RouterLink } from '@angular/router';
 import { BlogPostHelper } from '../../../../core/helpers/blogpost-helper';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [DashboardStaticticsComponent, DatePipe, RouterLink],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+    selector: 'app-dashboard',
+    imports: [DashboardStaticticsComponent, DatePipe, RouterLink],
+    templateUrl: './dashboard.component.html',
+    styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
   blogPostService = inject(BlogpostService);

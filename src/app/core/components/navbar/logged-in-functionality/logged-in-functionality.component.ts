@@ -6,24 +6,20 @@ import { BlogpostService } from '../../../../features/post/services/blogpost.ser
 
 @Component({
   selector: 'app-logged-in-functionality',
-  standalone: true,
   imports: [RouterLink],
   templateUrl: './logged-in-functionality.component.html',
-  styleUrl: './logged-in-functionality.component.css'
+  styleUrl: './logged-in-functionality.component.css',
 })
 export class LoggedInFunctionalityComponent {
   navbarService = inject(NavbarService);
   user = input.required<User>();
   blogPostService = inject(BlogpostService);
 
-
   createBatch() {
-    this.blogPostService.batchUpload()
-    .subscribe({
+    this.blogPostService.batchUpload().subscribe({
       next: () => {
-        alert('Batch finished successfully.')
-      }
+        alert('Batch finished successfully.');
+      },
     });
-
   }
 }

@@ -1,6 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
-import { Firestore, addDoc, collection, doc, setDoc } from '@angular/fire/firestore';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Firestore,
+  addDoc,
+  collection,
+  doc,
+  setDoc,
+} from '@angular/fire/firestore';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { BlogpostService } from '../../services/blogpost.service';
 import { MarkdownModule } from 'ngx-markdown';
 import { ImageService } from '../../../../shared/services/image.service';
@@ -8,35 +19,33 @@ import { getDownloadURL } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-create-post',
-  standalone: true,
   imports: [ReactiveFormsModule, MarkdownModule],
   templateUrl: './create-post.component.html',
-  styleUrl: './create-post.component.css'
+  styleUrl: './create-post.component.css',
 })
 export class CreatePostComponent {
-
   contentData = signal('');
   blogPostService = inject(BlogpostService);
   imageService = inject(ImageService);
 
   createPostForm = new FormGroup({
     // title: new FormControl<string>('',[Validators.required, Validators.minLength(6), Validators.maxLength(100)])
-    title: new FormControl<string>('',
-      {
-        nonNullable: true,
-        validators: [Validators.required, Validators.minLength(6), Validators.maxLength(100)]
-      }
-    ),
-    content: new FormControl<string>('',
-      {
-        nonNullable: true,
-        validators: [Validators.required, Validators.maxLength(3000)]
-      }
-    ),
+    title: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(100),
+      ],
+    }),
+    content: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(3000)],
+    }),
     coverImageUrl: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required]
-    })
+      validators: [Validators.required],
+    }),
   });
 
   get title() {
@@ -73,16 +82,14 @@ export class CreatePostComponent {
 
     const file: File = input.files[0];
 
-    this.imageService.uploadImage(file.name, file)
-      .then((snapshot) => {
-        getDownloadURL(snapshot.ref)
-          .then((downloadUrl) => {
-            this.createPostForm.patchValue({
-              coverImageUrl: downloadUrl
-            });
+    this.imageService.uploadImage(file.name, file).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((downloadUrl) => {
+        this.createPostForm.patchValue({
+          coverImageUrl: downloadUrl,
+        });
 
-            alert('Image upload successful');
-          })
-      })
+        alert('Image upload successful');
+      });
+    });
   }
 }

@@ -8,11 +8,10 @@ import { Router } from '@angular/router';
 import { confirmPasswordReset } from '@angular/fire/auth';
 
 @Component({
-  selector: 'app-edit-post',
-  standalone: true,
-  imports: [ReactiveFormsModule, MarkdownModule],
-  templateUrl: './edit-post.component.html',
-  styleUrl: './edit-post.component.css'
+    selector: 'app-edit-post',
+    imports: [ReactiveFormsModule, MarkdownModule],
+    templateUrl: './edit-post.component.html',
+    styleUrl: './edit-post.component.css'
 })
 export class EditPostComponent implements OnInit {
 
