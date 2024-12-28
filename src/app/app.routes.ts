@@ -6,6 +6,7 @@ import { RegisterComponent } from './features/user/pages/register/register.compo
 import { LoginComponent } from './features/user/pages/login/login.component';
 import { LogoutComponent } from './features/user/pages/logout/logout.component';
 import { HomeComponent } from './features/home/pages/home/home.component';
+import { ViewPostComponent } from './features/post/pages/view-post/view-post.component';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,10 @@ export const routes: Routes = [
   {
     path: 'create-post',
     component: CreatePostComponent
+  },
+  {
+    path: 'blog/:slug',
+    component: ViewPostComponent
   },
   {
     path: 'edit-post/:slug',
