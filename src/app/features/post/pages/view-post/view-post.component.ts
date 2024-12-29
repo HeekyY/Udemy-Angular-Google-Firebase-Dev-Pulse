@@ -1,5 +1,5 @@
 import { Component, inject, input } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { BlogpostService } from '../../services/blogpost.service';
 import { filter, switchMap } from 'rxjs';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -15,11 +15,13 @@ import { MarkdownComponent } from 'ngx-markdown';
 export class ViewPostComponent {
   private blogPostService = inject(BlogpostService);
   slug = input<string | undefined>(undefined);
-  slug$ = toObservable(this.slug);
   convertTimestampToDate = BlogPostHelper.convertTimestampToDate;
 
-  blogPost$ = this.slug$.pipe(
-    filter(slug => slug !== undefined),
-    switchMap(slug => this.blogPostService.getBlogPostBySlug(slug))
-  );
+  private blogPostResource = rxResource({
+    request: () => this.slug(),
+    loader: ({ request: slug }) => this.blogPostService.getBlogPostBySlug(slug),
+  });
+
+  blogPostData = this.blogPostResource.value;
+  isLoading = this.blogPostResource.isLoading;
 }
